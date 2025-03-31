@@ -1,32 +1,28 @@
-name: huizong
+name: huanlekan
 
 on:
   schedule:
-    - cron: '31 */2 * * *'  # 每2小时执行一次
+    - cron: '1 * * * *'
   workflow_dispatch:
 
 jobs:
-  generate-and-push:
+  generate_and_upload:
     runs-on: ubuntu-latest
 
     steps:
       # 第一步：检出当前仓库
-      - name: Checkout source repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # 第二步：设置PHP环境
-      - name: Setup PHP
+      # 第二步：设置 PHP 环境
+      - name: Set up PHP 7.4
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
-          coverage: none
+          php-version: '7.4'
 
-      # 第三步：生成EPG文件
-      - name: 生成faintv.m3u
-        run: |
-          php main.php
-          ls -l faintv.m3u
-          echo "文件生成时间：" $(date -R)
+      # 第三步：生成文件
+      - name: Run huanlekan.php
+        run: php huanlekan.php
 
       # 第四步：检出目标仓库
       - name: Checkout target repo
@@ -34,29 +30,38 @@ jobs:
         with:
           repository: zzq1234567890/huanlekan
           token: ${{ secrets.GITHUB_TOKEN }}
-          path: target-repo
+          path: epg
 
-      # 第五步：同步文件
-      - name: Sync files
+      # 第五步：强制覆盖文件（关键修复）
+      - name: Overwrite target file
         run: |
-          # 复制新文件到目标仓库
-          cp -vf faintv.m3u target-repo/faintv.m3u
-          
-          # 进入目标仓库目录
-          cd target-repo
-          
-          # 配置Git身份
-          git config user.name "zzq1234567890"
-          git config user.email "zzq1234567890@users.noreply.github.com"
-          
-          # 检查文件差异
-          if ! git diff --exit-code faintv.m3u; then
-            git add faintv.m3u
-            git commit -m "EPG自动更新: $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')"
+          # 确保覆盖前文件存在
+          ls -l faintv.m3u
+          # 强制复制并保留权限
+          cp -f faintv.m3u huanlekan/faintv.m3u
+          # 验证覆盖结果
+          ls -l huanlekan/faintv.m3u
+
+      # 第六步：提交变更（优化路径处理）
+      - name: Commit and push
+        working-directory: huanlekan  # 使用官方推荐方式指定路径
+        run: |
+          # 显式检查文件状态
+          git status
+          git diff
+
+          # 配置 Git 身份
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 添加所有变化（适应文件名大小写变化）
+          git add --all
+
+          # 检测是否有可提交内容
+          if [ -n "$(git status --porcelain)" ]; then
+            now_time=$(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M:%S')
+            git commit -m "自动更新时间：$now_time"
             git push origin main
-            echo "更新已推送"
           else
-            echo "没有检测到变更"
+            echo "无实际文件变更，跳过提交"
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
