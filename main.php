@@ -2,9 +2,9 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 header('Content-Type: text/plain; charset=UTF-8');
-
+   /*
 $Files = [
-    /*
+ 
     'https://raw.githubusercontent.com/zzq1234567890/huanlekan/refs/heads/main/体育.txt',
     'https://raw.githubusercontent.com/zzq1234567890/huanlekan/refs/heads/main/儿童.txt',
     'https://raw.githubusercontent.com/zzq1234567890/huanlekan/refs/heads/main/国际新闻.txt',
@@ -13,7 +13,7 @@ $Files = [
     'https://raw.githubusercontent.com/zzq1234567890/huanlekan/refs/heads/main/电影.txt',
     'https://raw.githubusercontent.com/zzq1234567890/huanlekan/refs/heads/main/综艺.txt'
     */
-    './sport.txt', './children.txt','./internal.txt','./recommdation.txt','./news.txt','./movie.txt','./enterment.txt'];
+    $Files = ['./sport.txt', './children.txt','./internal.txt','./recommdation.txt','./news.txt','./movie.txt','./enterment.txt'];
 
 $combinedData = [];
 
