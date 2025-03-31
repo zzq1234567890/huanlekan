@@ -21,7 +21,18 @@ foreach ($Files as $file) {
             throw new Exception("文件不存在: $file");
         }
 
-        $content = file_get_contents($file);
+       // $content = file_get_contents($file);
+          $ch1 = curl_init();
+          curl_setopt($ch1, CURLOPT_URL, $Files);
+          curl_setopt($ch1, CURLOPT_RETURNTRANSFER, 1);
+         //curl_setopt($ch1, CURLOPT_POST, 1);
+        //curl_setopt($ch1, CURLOPT_POSTFIELDS, $idk);
+        //curl_setopt($ch1, CURLOPT_HTTPHEADER, $header1);
+         curl_setopt($ch1,CURLOPT_ENCODING,'Vary: Accept-Encoding');
+         $content = curl_exec($ch1);
+         curl_close($ch1);
+
+        
         if ($content === false) {
             throw new Exception("无法读取文件: $file");
         }
