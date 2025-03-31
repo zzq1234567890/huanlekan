@@ -30,7 +30,7 @@ jobs:
         with:
           repository: zzq1234567890/huanlekan
           token: ${{ secrets.GITHUB_TOKEN }}
-          path: epg
+          path: huanlekan
 
       # 第五步：强制覆盖文件（关键修复）
       - name: Overwrite target file
