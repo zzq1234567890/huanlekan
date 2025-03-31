@@ -49,7 +49,9 @@ foreach ($combinedData as $item) {
         "#EXTINF:-1 tvg-id=\"%s\" tvg-name=\"%s\" tvg-logo=\"%s\" group-title=\"4gtv\",%s\n",
         $name,
         $name,
-        $logo ?: $name,
+        //$logo ?: $name,
+        $logo,
+        $name,
         $id
     );
 
