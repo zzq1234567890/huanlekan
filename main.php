@@ -64,4 +64,5 @@ foreach ($combinedData as $item) {
 
 // 写入文件并设置权限
 file_put_contents('faintv.txt', $output);
-chmod('faintv.txt', 0644);
+//chmod('faintv.txt', 0644);
+?>
