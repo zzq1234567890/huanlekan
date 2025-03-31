@@ -56,6 +56,6 @@ foreach ($combinedData as $item) {
     $output .= "http://127.0.0.1:8081/huanlekan.php?id=" . urlencode($item->name) . "\n\n";
 }
 
-file_put_contents('faintv.txt', $output);
-chmod('faintv.txt', 0644);
+file_put_contents('faintv.m3u', $output);
+chmod('faintv.m3u', 0644);
 ?>
