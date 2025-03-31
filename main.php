@@ -4,13 +4,13 @@ error_reporting(E_ALL);
 header('Content-Type: text/plain; charset=UTF-8');
 
 $Files = [
-    './体育.txt',
-    './儿童.txt',
-    './国际新闻.txt',
-    './推荐.txt',
-    './新闻.txt',
-    './电影.txt',
-    './综艺.txt'
+    'https://github.com/zzq1234567890/huanlekan/blob/main/体育.txt',
+    'https://github.com/zzq1234567890/huanlekan/blob/main/儿童.txt',
+    'https://github.com/zzq1234567890/huanlekan/blob/main/国际新闻.txt',
+    'https://github.com/zzq1234567890/huanlekan/blob/main/推荐.txt',
+    'https://github.com/zzq1234567890/huanlekan/blob/main/新闻.txt',
+    'https://github.com/zzq1234567890/huanlekan/blob/main/电影.txt',
+    'https://github.com/zzq1234567890/huanlekan/blob/main/综艺.txt'
 ];
 
 $combinedData = [];
