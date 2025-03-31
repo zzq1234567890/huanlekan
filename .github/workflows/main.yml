@@ -22,7 +22,7 @@ jobs:
           coverage: none
 
       # 第三步：生成EPG文件
-      - name: Generate EPG
+      - name: 生成faintv.txt
         run: |
           php main.php
           ls -l faintv.txt
