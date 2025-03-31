@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 header('Content-Type: text/plain; charset=UTF-8');
 
-$Files = ['./sport.txt', './children.txt', './internal.txt', './recommdation.txt', './news.txt', './movie.txt', './entertainment.txt'];
+$Files = ['./sport.txt', './children.txt', './internal.txt', './recommdation.txt', './news.txt', './movie.txt', './enterment.txt'];
 
 $combinedData = [];
 
