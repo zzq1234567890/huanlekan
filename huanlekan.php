@@ -47,13 +47,13 @@ foreach ($combinedData as $item) {
 
     $output .= sprintf(
         "#EXTINF:-1 tvg-id=\"%s\" tvg-name=\"%s\" tvg-logo=\"%s\" group-title=\"4gtv\",%s\n",
-        $id,
-        $id,
-        $logo ?: $id,
-        $name
+        $name,
+        $name,
+        $logo ?: $name,
+        $id
     );
 
-    $output .= "http://127.0.0.1:8081/huanlekan.php?id=" . urlencode($item->name) . "\n\n";
+    $output .= "http://127.0.0.1:8081/huanlekan.php?id=" . $id . "\n\n";
 }
 
 file_put_contents('faintv.m3u', $output);
