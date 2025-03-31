@@ -1,7 +1,7 @@
 <?php
-ini_set("max_execution_time", 300);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 header('Content-Type: text/plain; charset=UTF-8');
-header("Content-Disposition: attachment; filename=faintv.txt");
 
 $Files = [
     './体育.txt',
@@ -15,47 +15,43 @@ $Files = [
 
 $combinedData = [];
 
-foreach ($Files as $filePath) {
-    // 修正点：修复缺失的右括号
-    if (!file_exists($filePath)) {  // ← 这里原来缺少右括号
-        trigger_error("File not found: {$filePath}", E_USER_WARNING);
-        continue;
-    }
+foreach ($Files as $file) {
+    try {
+        if (!file_exists($file)) {
+            throw new Exception("文件不存在: $file");
+        }
 
-    $fileContent = file_get_contents($filePath);
-    if ($fileContent === false) {
-        trigger_error("Failed to read file: {$filePath}", E_USER_WARNING);
-        continue;
-    }
+        $content = file_get_contents($file);
+        if ($content === false) {
+            throw new Exception("无法读取文件: $file");
+        }
 
-    $parsedData = json_decode($fileContent);
-    if ($parsedData === null || json_last_error() !== JSON_ERROR_NONE) {
-        trigger_error("Invalid JSON in file: {$filePath}", E_USER_WARNING);
-        continue;
-    }
+        $data = json_decode($content);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception("JSON解析错误: " . json_last_error_msg());
+        }
 
-    if (!isset($parsedData->data) || !is_array($parsedData->data)) {
-        trigger_error("Invalid data structure in file: {$filePath}", E_USER_WARNING);
-        continue;
-    }
+        if (!isset($data->data) || !is_array($data->data)) {
+            throw new Exception("无效的数据结构: $file");
+        }
 
-    $combinedData = array_merge($combinedData, $parsedData->data);
+        $combinedData = array_merge($combinedData, $data->data);
+    } catch (Exception $e) {
+        file_put_contents('php://stderr', "[ERROR] " . $e->getMessage() . PHP_EOL);
+    }
 }
 
+$output = "";
 foreach ($combinedData as $item) {
-    if (!isset(
-        $item->_id,
-        $item->name,
-        $item->image->src
-    )) {
+    if (!isset($item->_id, $item->name, $item->image->src)) {
         continue;
     }
 
-    $id = filter_var($item->_id, FILTER_SANITIZE_STRING);
+    $id = htmlspecialchars($item->_id, ENT_QUOTES, 'UTF-8');
     $name = htmlspecialchars($item->name, ENT_QUOTES, 'UTF-8');
     $logo = filter_var($item->image->src, FILTER_VALIDATE_URL);
 
-    echo sprintf(
+    $output .= sprintf(
         "#EXTINF:-1 tvg-id=\"%s\" tvg-name=\"%s\" tvg-logo=\"%s\" group-title=\"4gtv\",%s\n",
         $id,
         $id,
@@ -63,6 +59,9 @@ foreach ($combinedData as $item) {
         $name
     );
 
-    echo "http://127.0.0.1:8081/huanlekan.php?id=" . urlencode($item->name) . "\n\n";
+    $output .= "http://127.0.0.1:8081/huanlekan.php?id=" . urlencode($item->name) . "\n\n";
 }
-?>
+
+// 写入文件并设置权限
+file_put_contents('faintv.txt', $output);
+chmod('faintv.txt', 0644);
