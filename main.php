@@ -11,22 +11,13 @@ foreach ($Files as $file) {
     try {
         $realPath = realpath($file);
         if (!$realPath || !file_exists($realPath)) {
-            throw new Exception("文件不存在: $file");
+            throw new Exception("文件不存在: $file (實際路徑: " . ($realPath ?: "無法解析") . ")");
         }
 
-        $ch1 = curl_init();
-        curl_setopt($ch1, CURLOPT_URL, $realPath);
-        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch1, CURLOPT_ENCODING, '');
-        
-        $content = curl_exec($ch1);
+        // 使用 file_get_contents 讀取本機檔案
+        $content = file_get_contents($realPath);
         if ($content === false) {
-            throw new Exception("cURL 錯誤: " . curl_error($ch1));
-        }
-        curl_close($ch1);
-
-        if (empty($content)) {
-            throw new Exception("文件內容為空: $file");
+            throw new Exception("無法讀取文件: $file");
         }
 
         $data = json_decode($content);
