@@ -51,8 +51,8 @@ jobs:
           git diff
 
           # 配置 Git 身份
-          git config zzq1234567890 "github-actions[bot]"
-          git config zzqzhj@126.com "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
           # 添加所有变化（适应文件名大小写变化）
           git add --all
