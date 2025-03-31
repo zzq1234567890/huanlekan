@@ -22,10 +22,10 @@ jobs:
           coverage: none
 
       # 第三步：生成EPG文件
-      - name: 生成faintv.txt
+      - name: 生成faintv.m3u
         run: |
           php main.php
-          ls -l faintv.txt
+          ls -l faintv.m3u
           echo "文件生成时间：" $(date -R)
 
       # 第四步：检出目标仓库
@@ -40,18 +40,18 @@ jobs:
       - name: Sync files
         run: |
           # 复制新文件到目标仓库
-          cp -vf faintv.txt target-repo/faintv.txt
+          cp -vf faintv.m3u target-repo/faintv.m3u
           
           # 进入目标仓库目录
           cd target-repo
           
           # 配置Git身份
-          git config user.name "EPG Auto Updater"
-          git config user.email "epg-bot@users.noreply.github.com"
+          git config user.name "zzq1234567890"
+          git config user.email "zzq1234567890@users.noreply.github.com"
           
           # 检查文件差异
-          if ! git diff --exit-code faintv.txt; then
-            git add faintv.txt
+          if ! git diff --exit-code faintv.m3u; then
+            git add faintv.m3u
             git commit -m "EPG自动更新: $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M')"
             git push origin main
             echo "更新已推送"
